@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@keyframes slideInHighlight {
+  0% {
+    background-color: #dbeafe;
+    transform: translateY(-6px);
+    opacity: 0.8;
+  }
+  15% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    background-color: white;
+  }
+}
+
+.highlight-new {
+  animation: slideInHighlight 6s ease-out forwards;
+}

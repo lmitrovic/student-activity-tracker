@@ -1,23 +1,25 @@
-export type FileExt = 'py' | 'java' | 'cpp' | 'pdf' | 'zip' | 'txt';
-
-export interface SubmittedFile {
-  id: string;
-  name: string;
-  sizeKb: number;
-  ext: FileExt;
+export interface Test {
+  testName: string;
+  testDate: string;
+  subjectShortName: string;
+  testType: string | null;
 }
 
 export interface Submission {
-  id: string;
-  studentName: string;
-  indexNumber: string;
-  email: string;
-  submittedAt: Date;
-  files: SubmittedFile[];
-  isLate: boolean;
+  id: number;
+  firstName: string;
+  lastName: string;
+  indexNumber: number;
+  startYear: string;
+  studyProgramShort: string;
+  studentGroup: string;
+  taskStartedTime: string;
+  taskSubmitted: boolean;
+  taskSubmittedTime: string | null;
+  testName: string;
+  term: string;
+  groupLabel: string;
 }
-
-export type PendingStudent = Omit<Submission, 'submittedAt'>;
 
 export interface ExamConfig {
   subject: string;

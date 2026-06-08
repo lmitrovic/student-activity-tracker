@@ -4,13 +4,12 @@ import SubmissionCard from './SubmissionCard';
 
 interface Props {
   submissions: Submission[];
-  newIds: Set<string>;
+  now: number;
   pendingCount: number;
   search: string;
-  onViewFiles: (s: Submission) => void;
 }
 
-export default function SubmissionList({ submissions, newIds, pendingCount, search, onViewFiles }: Props) {
+export default function SubmissionList({ submissions, now, pendingCount, search }: Props) {
   if (submissions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-slate-400">
@@ -36,8 +35,7 @@ export default function SubmissionList({ submissions, newIds, pendingCount, sear
           <SubmissionCard
             key={s.id}
             submission={s}
-            isNew={newIds.has(s.id)}
-            onViewFiles={() => onViewFiles(s)}
+            isNew={!!s.taskSubmittedTime && now - new Date(s.taskSubmittedTime).getTime() < 10000}
           />
         ))}
       </div>

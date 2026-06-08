@@ -1,6 +1,4 @@
-import { CheckCircle2, Users, Clock, AlertTriangle } from 'lucide-react';
-import { formatTime, formatDuration } from '../utils/format';
-import { examConfig } from '../data/mockData';
+import { CheckCircle2, Users, Timer } from 'lucide-react';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -25,21 +23,28 @@ function StatCard({ icon, label, value, sub, valueColor }: StatCardProps) {
   );
 }
 
+function formatAvg(ms: number): string {
+  const totalSec = Math.round(ms / 1000);
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  if (min === 0) return `${sec}s`;
+  return `${min}min ${sec}s`;
+}
+
 interface Props {
   submitted: number;
   total: number;
-  lateCount: number;
-  elapsedMs: number;
+  avgMs: number | null;
 }
 
-export default function StatsBar({ submitted, total, lateCount, elapsedMs }: Props) {
-  const pct = Math.round((submitted / total) * 100);
+export default function StatsBar({ submitted, total, avgMs }: Props) {
+  const pct = total === 0 ? 0 : Math.round((submitted / total) * 100);
   const remaining = total - submitted;
 
   return (
     <div className="bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-5xl mx-auto px-6 py-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
           <StatCard
             icon={<CheckCircle2 className="w-5 h-5 text-blue-600" />}
             label="Predato radova"
@@ -55,18 +60,11 @@ export default function StatsBar({ submitted, total, lateCount, elapsedMs }: Pro
             valueColor="text-orange-300"
           />
           <StatCard
-            icon={<Clock className="w-5 h-5 text-indigo-500" />}
-            label="Proteklo vreme"
-            value={formatDuration(elapsedMs)}
-            sub={`Početak u ${formatTime(examConfig.startedAt)}`}
-            valueColor="text-indigo-600"
-          />
-          <StatCard
-            icon={<AlertTriangle className="w-5 h-5 text-red-400" />}
-            label="Kasno predalo"
-            value={String(lateCount)}
-            sub={lateCount === 0 ? 'Svi na vreme' : 'studenata kasno'}
-            valueColor={lateCount > 0 ? 'text-red-500' : 'text-emerald-600'}
+            icon={<Timer className="w-5 h-5 text-violet-500" />}
+            label="Prosečno vreme izrade"
+            value={avgMs !== null ? formatAvg(avgMs) : '—'}
+            sub={avgMs !== null ? `na osnovu ${submitted} predaja` : 'nema podataka'}
+            valueColor="text-violet-600"
           />
         </div>
 

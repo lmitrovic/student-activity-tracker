@@ -4,4 +4,4 @@
 npm run build
 
 # 2. Kopiraj na server
-scp -r dist/ user@192.168.124.24:/var/www/student-activity-tracker/dist
+scp -r dist/* user@192.168.124.24:/var/www/student-activity-tracker/dist/

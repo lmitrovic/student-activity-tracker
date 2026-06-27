@@ -82,8 +82,8 @@ export default function TestPage() {
           const match = disposition.match(/filename[^;=\n]*=(?:(['"])(?<q>[^'"]*)\1|(?<bare>[^;\n]*))/);
           const serverName = match?.groups?.q ?? match?.groups?.bare?.trim() ?? '';
           const ext = serverName ? serverName.slice(serverName.lastIndexOf('.')) : '';
-          const fileName = `${s.lastName}_${s.firstName}_${s.studyProgramShort}${s.indexNumber}-${s.startYear}_(${s.studentGroup})${ext}`;
-          zip.file(fileName, blob);
+          const fileName = `${s.lastName}_${s.firstName}_${s.studyProgramShort}${s.indexNumber}-${s.startYear}_(${s.studentGroup})_${s.groupLabel}${ext}`;
+          zip.folder(s.groupLabel)!.file(fileName, blob);
         })
       );
       const zipBlob = await zip.generateAsync({ type: 'blob' });

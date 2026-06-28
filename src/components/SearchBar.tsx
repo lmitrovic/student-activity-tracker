@@ -3,11 +3,10 @@ import { Search, Radio } from 'lucide-react';
 interface Props {
   search: string;
   onSearch: (value: string) => void;
-  totalSubmitted: number;
   filteredCount: number;
 }
 
-export default function SearchBar({ search, onSearch, totalSubmitted, filteredCount }: Props) {
+export default function SearchBar({ search, onSearch, filteredCount }: Props) {
   return (
     <div className="flex items-center gap-3 flex-1">
       <div className="relative flex-1">

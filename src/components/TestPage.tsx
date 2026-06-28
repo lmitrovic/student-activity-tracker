@@ -142,7 +142,6 @@ export default function TestPage() {
           <SearchBar
             search={search}
             onSearch={setSearch}
-            totalSubmitted={submitted.length}
             filteredCount={filtered.length}
           />
           <div className="flex gap-3 flex-shrink-0">

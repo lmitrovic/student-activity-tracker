@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Download, Loader2 } from 'lucide-react';
+import { Download, FileSpreadsheet, Loader2 } from 'lucide-react';
 import JSZip from 'jszip';
+import * as XLSX from 'xlsx';
 import type { Submission, Test } from '../types';
 import Header from './Header';
 import StatsBar from './StatsBar';
@@ -99,6 +100,28 @@ export default function TestPage() {
     }
   };
 
+  const exportToExcel = () => {
+    if (submitted.length === 0) return;
+    const toTime = (dt: string | null) =>
+      dt ? new Date(dt).toLocaleTimeString('sr-RS') : '';
+    const rows = [...submitted]
+      .sort((a, b) => a.groupLabel.localeCompare(b.groupLabel))
+      .map(s => ({
+        'Smer': s.studyProgramShort,
+        'Broj indeksa': s.indexNumber,
+        'Godina upisa': s.startYear,
+        'Ime': s.firstName,
+        'Prezime': s.lastName,
+        'Grupa testa': s.groupLabel,
+        'Početak': toTime(s.taskStartedTime),
+        'Kraj': toTime(s.taskSubmittedTime),
+      }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Predati radovi');
+    XLSX.writeFile(wb, `${test!.testName}_export.xlsx`);
+  };
+
   const q = search.toLowerCase();
   const filtered = submitted.filter(s =>
     `${s.firstName} ${s.lastName}`.toLowerCase().includes(q) ||
@@ -122,6 +145,14 @@ export default function TestPage() {
             totalSubmitted={submitted.length}
             filteredCount={filtered.length}
           />
+          <button
+            onClick={exportToExcel}
+            disabled={submitted.length === 0}
+            className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-shrink-0 shadow-sm"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            Export
+          </button>
           <button
             onClick={downloadAll}
             disabled={submitted.length === 0 || downloading}

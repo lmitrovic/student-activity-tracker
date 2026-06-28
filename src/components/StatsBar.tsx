@@ -25,8 +25,10 @@ function StatCard({ icon, label, value, sub, valueColor }: StatCardProps) {
 
 function formatAvg(ms: number): string {
   const totalSec = Math.round(ms / 1000);
-  const min = Math.floor(totalSec / 60);
+  const h = Math.floor(totalSec / 3600);
+  const min = Math.floor((totalSec % 3600) / 60);
   const sec = totalSec % 60;
+  if (h > 0) return `${h}h ${min}min ${sec}s`;
   if (min === 0) return `${sec}s`;
   return `${min}min ${sec}s`;
 }

@@ -138,31 +138,33 @@ export default function TestPage() {
       />
       <StatsBar submitted={submitted.length} total={total} avgMs={avgMs} />
       <main className="max-w-5xl mx-auto px-6 py-6">
-        <div className="flex gap-3 mb-5">
+        <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <SearchBar
             search={search}
             onSearch={setSearch}
             totalSubmitted={submitted.length}
             filteredCount={filtered.length}
           />
-          <button
-            onClick={exportToExcel}
-            disabled={submitted.length === 0}
-            className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-shrink-0 shadow-sm"
-          >
-            <FileSpreadsheet className="w-4 h-4" />
-            Export
-          </button>
-          <button
-            onClick={downloadAll}
-            disabled={submitted.length === 0 || downloading}
-            className="flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-shrink-0 shadow-sm"
-          >
-            {downloading
-              ? <Loader2 className="w-4 h-4 animate-spin" />
-              : <Download className="w-4 h-4" />}
-            {downloading ? 'Preuzimanje...' : `Preuzmi sve (${submitted.length})`}
-          </button>
+          <div className="flex gap-3 flex-shrink-0">
+            <button
+              onClick={exportToExcel}
+              disabled={submitted.length === 0}
+              className="flex items-center justify-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-1 sm:flex-none shadow-sm"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              Export
+            </button>
+            <button
+              onClick={downloadAll}
+              disabled={submitted.length === 0 || downloading}
+              className="flex items-center justify-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-1 sm:flex-none shadow-sm"
+            >
+              {downloading
+                ? <Loader2 className="w-4 h-4 animate-spin" />
+                : <Download className="w-4 h-4" />}
+              {downloading ? 'Preuzimanje...' : `Preuzmi sve (${submitted.length})`}
+            </button>
+          </div>
         </div>
         <SubmissionList
           submissions={filtered}

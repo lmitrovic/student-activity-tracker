@@ -20,14 +20,12 @@ export default function SearchBar({ search, onSearch, totalSubmitted, filteredCo
           className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-sm"
         />
       </div>
-      <div className="flex items-center gap-2 text-sm text-slate-500 flex-shrink-0 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
-        <Radio className="w-4 h-4 text-blue-500" />
-        <span>
-          {search
-            ? `${filteredCount} rezultat${filteredCount === 1 ? '' : 'a'}`
-            : `${totalSubmitted} predatih radova`}
-        </span>
-      </div>
+      {search && (
+        <div className="flex items-center gap-2 text-sm text-slate-500 flex-shrink-0 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
+          <Radio className="w-4 h-4 text-blue-500" />
+          <span>{filteredCount} rezultat{filteredCount === 1 ? '' : 'a'}</span>
+        </div>
+      )}
     </div>
   );
 }

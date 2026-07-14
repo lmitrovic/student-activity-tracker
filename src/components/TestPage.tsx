@@ -127,7 +127,8 @@ export default function TestPage() {
   const filtered = submitted.filter(s =>
     `${s.firstName} ${s.lastName}`.toLowerCase().includes(q) ||
     `${s.studyProgramShort}${s.indexNumber}/${s.startYear}`.toLowerCase().includes(q) ||
-    s.studentGroup.toLowerCase().includes(q)
+    s.studentGroup.toLowerCase().includes(q) ||
+    s.classroom.toLowerCase().includes(q)
   );
 
   return (

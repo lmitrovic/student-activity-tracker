@@ -19,6 +19,7 @@ export interface Submission {
   testName: string;
   term: string;
   groupLabel: string;
+  classroom: string;
 }
 
 export interface ExamConfig {

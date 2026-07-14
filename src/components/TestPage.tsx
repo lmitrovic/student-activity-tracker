@@ -83,7 +83,7 @@ export default function TestPage() {
           const match = disposition.match(/filename[^;=\n]*=(?:(['"])(?<q>[^'"]*)\1|(?<bare>[^;\n]*))/);
           const serverName = match?.groups?.q ?? match?.groups?.bare?.trim() ?? '';
           const ext = serverName ? serverName.slice(serverName.lastIndexOf('.')) : '';
-          const fileName = `${s.lastName}_${s.firstName}_${s.studyProgramShort}${s.indexNumber}-${s.startYear}_(${s.studentGroup})_${s.groupLabel}${ext}`;
+          const fileName = `${s.lastName}_${s.firstName}_${s.studyProgramShort}${s.indexNumber}-${s.startYear}_(${s.studentGroup})_${s.classroom}${ext}`;
           zip.folder(s.groupLabel)!.file(fileName, blob);
         })
       );
@@ -113,6 +113,7 @@ export default function TestPage() {
         'Ime': s.firstName,
         'Prezime': s.lastName,
         'Grupa testa': s.groupLabel,
+        'Učionica': s.classroom,
         'Početak': toTime(s.taskStartedTime),
         'Kraj': toTime(s.taskSubmittedTime),
       }));

@@ -64,7 +64,7 @@ export default function SubmissionCard({ submission, isNew }: Props) {
         </div>
         <div className="flex items-center gap-1 text-xs text-gray-400 mt-1.5">
           <Users className="w-3 h-3" />
-          <span>Grupa {submission.studentGroup} &nbsp;·&nbsp; {submission.term} &nbsp;·&nbsp; {submission.groupLabel}</span>
+          <span>Grupa {submission.studentGroup} &nbsp;·&nbsp; {submission.term} &nbsp;·&nbsp; {submission.groupLabel} &nbsp;·&nbsp; {submission.classroom}</span>
         </div>
       </div>
 

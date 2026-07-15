@@ -7,23 +7,29 @@ interface Props {
   now: number;
   pendingCount: number;
   search: string;
+  variant: 'submitted' | 'pending';
 }
 
-export default function SubmissionList({ submissions, now, pendingCount, search }: Props) {
+export default function SubmissionList({ submissions, now, pendingCount, search, variant }: Props) {
   if (submissions.length === 0) {
+    const emptyTitle = search
+      ? 'Nema rezultata za traženi pojam'
+      : variant === 'submitted'
+        ? 'Čeka se predaja radova...'
+        : 'Svi studenti su predali rad!';
+    const emptySub = search
+      ? `Proverite pravopis za "${search}"`
+      : variant === 'submitted'
+        ? 'Novo predati radovi pojaviće se ovde automatski'
+        : 'Nema studenata koji čekaju predaju';
+
     return (
       <div className="flex flex-col items-center justify-center py-24 text-slate-400">
         <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
           <Search className="w-7 h-7" />
         </div>
-        <p className="text-base font-medium text-slate-500">
-          {search ? 'Nema rezultata za traženi pojam' : 'Čeka se predaja radova...'}
-        </p>
-        <p className="text-sm mt-1">
-          {search
-            ? `Proverite pravopis za "${search}"`
-            : 'Novo predati radovi pojaviće se ovde automatski'}
-        </p>
+        <p className="text-base font-medium text-slate-500">{emptyTitle}</p>
+        <p className="text-sm mt-1">{emptySub}</p>
       </div>
     );
   }
@@ -35,12 +41,12 @@ export default function SubmissionList({ submissions, now, pendingCount, search 
           <SubmissionCard
             key={s.id}
             submission={s}
-            isNew={!!s.taskSubmittedTime && now - new Date(s.taskSubmittedTime).getTime() < 10000}
+            isNew={!!s.taskSubmittedTime && now - new Date(s.taskSubmittedTime).getTime() < 30000}
           />
         ))}
       </div>
 
-      {pendingCount > 0 && !search && (
+      {variant === 'submitted' && pendingCount > 0 && !search && (
         <div className="flex items-center justify-center gap-2 mt-6 text-xs text-slate-400">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />

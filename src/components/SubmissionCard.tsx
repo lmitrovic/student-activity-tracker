@@ -1,4 +1,4 @@
-import { Clock, Users, Download } from 'lucide-react';
+import { Clock, Users, Download, Play, Flag } from 'lucide-react';
 import type { Submission } from '../types';
 
 const avatarColors = [
@@ -13,7 +13,7 @@ function getAvatarColor(id: number) {
 }
 
 function getInitials(firstName: string, lastName: string) {
-  return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase();
+  return `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.toUpperCase();
 }
 
 function formatTime(dateStr: string) {
@@ -66,27 +66,43 @@ export default function SubmissionCard({ submission, isNew }: Props) {
           <Users className="w-3 h-3" />
           <span>Grupa {submission.studentGroup} &nbsp;·&nbsp; {submission.term} &nbsp;·&nbsp; {submission.groupLabel} &nbsp;·&nbsp; {submission.classroom}</span>
         </div>
+        {submission.taskSubmitted && submission.taskSubmittedTime && (
+          <div className="text-xs text-gray-400 mt-1.5">{timeSince(submission.taskSubmittedTime)}</div>
+        )}
       </div>
 
       {/* Right side */}
       <div className="flex flex-col items-end gap-2.5 flex-shrink-0">
-        {submission.taskSubmittedTime && (
-          <div className="text-right">
-            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
-              <Clock className="w-3.5 h-3.5 text-gray-400" />
-              {formatTime(submission.taskSubmittedTime)}
+        {submission.taskSubmitted && submission.taskSubmittedTime ? (
+          <>
+            <div className="text-right">
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+                <Play className="w-3.5 h-3.5 text-gray-400" />
+                {formatTime(submission.taskStartedTime)}
+              </div>
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700 mt-0.5">
+                <Flag className="w-3.5 h-3.5 text-gray-400" />
+                {formatTime(submission.taskSubmittedTime)}
+              </div>
             </div>
-            <div className="text-xs text-gray-400 mt-0.5 text-right">{timeSince(submission.taskSubmittedTime)}</div>
+            <a
+              href={`/api/project/download/studentassignment/${submission.id}`}
+              download
+              className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg transition-colors font-medium"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Preuzmi rad
+            </a>
+          </>
+        ) : (
+          <div className="text-right">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-amber-600">
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              U radu
+            </div>
+            <div className="text-xs text-gray-400 mt-0.5 text-right">od {formatTime(submission.taskStartedTime)}</div>
           </div>
         )}
-        <a
-          href={`/api/project/download/studentassignment/${submission.id}`}
-          download
-          className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg transition-colors font-medium"
-        >
-          <Download className="w-3.5 h-3.5" />
-          Preuzmi rad
-        </a>
       </div>
     </div>
   );

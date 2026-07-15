@@ -17,6 +17,7 @@ export default function TestPage() {
   const [now, setNow] = useState(Date.now());
   const [search, setSearch] = useState('');
   const [downloading, setDownloading] = useState(false);
+  const [tab, setTab] = useState<'submitted' | 'pending'>('submitted');
 
   useEffect(() => {
     if (!testName) return;
@@ -58,8 +59,11 @@ export default function TestPage() {
   const submitted = allStudents
     .filter(s => s.taskSubmitted)
     .sort((a, b) => new Date(b.taskSubmittedTime!).getTime() - new Date(a.taskSubmittedTime!).getTime());
+  const pending = allStudents
+    .filter(s => !s.taskSubmitted)
+    .sort((a, b) => `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`));
   const total = allStudents.length;
-  const pendingCount = allStudents.filter(s => !s.taskSubmitted).length;
+  const pendingCount = pending.length;
 
   const avgMs = (() => {
     const valid = submitted.filter(s => s.taskStartedTime && s.taskSubmittedTime);
@@ -84,7 +88,7 @@ export default function TestPage() {
           const serverName = match?.groups?.q ?? match?.groups?.bare?.trim() ?? '';
           const ext = serverName ? serverName.slice(serverName.lastIndexOf('.')) : '';
           const fileName = `${s.lastName}_${s.firstName}_${s.studyProgramShort}${s.indexNumber}-${s.startYear}_(${s.studentGroup})_${s.classroom}${ext}`;
-          zip.folder(s.groupLabel)!.file(fileName, blob);
+          zip.folder(s.groupLabel ?? 'nepoznato')!.file(fileName, blob);
         })
       );
       const zipBlob = await zip.generateAsync({ type: 'blob' });
@@ -105,7 +109,7 @@ export default function TestPage() {
     const toTime = (dt: string | null) =>
       dt ? new Date(dt).toLocaleTimeString('sr-RS') : '';
     const rows = [...submitted]
-      .sort((a, b) => a.groupLabel.localeCompare(b.groupLabel))
+      .sort((a, b) => (a.groupLabel ?? '').localeCompare(b.groupLabel ?? ''))
       .map(s => ({
         'Smer': s.studyProgramShort,
         'Broj indeksa': s.indexNumber,
@@ -124,12 +128,13 @@ export default function TestPage() {
   };
 
   const q = search.toLowerCase();
-  const filtered = submitted.filter(s =>
-    `${s.firstName} ${s.lastName}`.toLowerCase().includes(q) ||
-    `${s.studyProgramShort}${s.indexNumber}/${s.startYear}`.toLowerCase().includes(q) ||
-    s.studentGroup.toLowerCase().includes(q) ||
-    s.classroom.toLowerCase().includes(q)
-  );
+  const matchesQuery = (s: Submission) =>
+    `${s.firstName ?? ''} ${s.lastName ?? ''}`.toLowerCase().includes(q) ||
+    `${s.studyProgramShort ?? ''}${s.indexNumber ?? ''}/${s.startYear ?? ''}`.toLowerCase().includes(q) ||
+    (s.studentGroup ?? '').toLowerCase().includes(q) ||
+    (s.classroom ?? '').toLowerCase().includes(q);
+  const filteredSubmitted = submitted.filter(matchesQuery);
+  const filteredPending = pending.filter(matchesQuery);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -140,37 +145,62 @@ export default function TestPage() {
       />
       <StatsBar submitted={submitted.length} total={total} avgMs={avgMs} />
       <main className="max-w-5xl mx-auto px-6 py-6">
+        <div className="flex gap-2 mb-5">
+          <button
+            onClick={() => setTab('submitted')}
+            className={`flex-1 text-sm font-medium px-4 py-2 rounded-xl transition-colors ${
+              tab === 'submitted'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            Predato ({submitted.length})
+          </button>
+          <button
+            onClick={() => setTab('pending')}
+            className={`flex-1 text-sm font-medium px-4 py-2 rounded-xl transition-colors ${
+              tab === 'pending'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            Čeka se ({pendingCount})
+          </button>
+        </div>
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <SearchBar
             search={search}
             onSearch={setSearch}
           />
-          <div className="flex gap-3 flex-shrink-0">
-            <button
-              onClick={exportToExcel}
-              disabled={submitted.length === 0}
-              className="flex items-center justify-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-1 sm:flex-none shadow-sm"
-            >
-              <FileSpreadsheet className="w-4 h-4" />
-              Export
-            </button>
-            <button
-              onClick={downloadAll}
-              disabled={submitted.length === 0 || downloading}
-              className="flex items-center justify-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-1 sm:flex-none shadow-sm"
-            >
-              {downloading
-                ? <Loader2 className="w-4 h-4 animate-spin" />
-                : <Download className="w-4 h-4" />}
-              {downloading ? 'Preuzimanje...' : `Preuzmi sve (${submitted.length})`}
-            </button>
-          </div>
+          {tab === 'submitted' && (
+            <div className="flex gap-3 flex-shrink-0">
+              <button
+                onClick={exportToExcel}
+                disabled={submitted.length === 0}
+                className="flex items-center justify-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-1 sm:flex-none shadow-sm"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                Export
+              </button>
+              <button
+                onClick={downloadAll}
+                disabled={submitted.length === 0 || downloading}
+                className="flex items-center justify-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl transition-colors font-medium flex-1 sm:flex-none shadow-sm"
+              >
+                {downloading
+                  ? <Loader2 className="w-4 h-4 animate-spin" />
+                  : <Download className="w-4 h-4" />}
+                {downloading ? 'Preuzimanje...' : `Preuzmi sve (${submitted.length})`}
+              </button>
+            </div>
+          )}
         </div>
         <SubmissionList
-          submissions={filtered}
+          submissions={tab === 'submitted' ? filteredSubmitted : filteredPending}
           now={now}
           pendingCount={pendingCount}
           search={search}
+          variant={tab}
         />
       </main>
     </div>

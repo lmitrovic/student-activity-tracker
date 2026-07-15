@@ -38,74 +38,76 @@ export default function SubmissionCard({ submission, isNew }: Props) {
 
   return (
     <div
-      className={`bg-white rounded-xl border px-5 py-4 flex items-center gap-4 transition-shadow duration-200 ${
+      className={`bg-white rounded-xl border px-4 sm:px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 transition-shadow duration-200 ${
         isNew
           ? 'border-blue-300 shadow-lg shadow-blue-100 highlight-new'
           : 'border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200'
       }`}
     >
-      {/* Avatar */}
-      <div className={`w-11 h-11 rounded-full ${getAvatarColor(submission.id)} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 select-none`}>
-        {getInitials(submission.firstName, submission.lastName)}
-      </div>
+      <div className="flex items-center gap-4 flex-1 min-w-0">
+        {/* Avatar */}
+        <div className={`w-11 h-11 rounded-full ${getAvatarColor(submission.id)} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 select-none`}>
+          {getInitials(submission.firstName, submission.lastName)}
+        </div>
 
-      {/* Student info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-semibold text-gray-900 text-sm">{fullName}</span>
-          <span className="text-xs font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-100">
-            {formattedIndex}
-          </span>
-          {isNew && (
-            <span className="text-xs font-bold bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-md animate-pulse">
-              NOVO
+        {/* Student info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-semibold text-gray-900 text-sm">{fullName}</span>
+            <span className="text-xs font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-100">
+              {formattedIndex}
             </span>
+            {isNew && (
+              <span className="text-xs font-bold bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-md animate-pulse">
+                NOVO
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-3 text-xs text-gray-400 mt-1.5 flex-wrap">
+            <span className="flex items-center gap-1">
+              <Users className="w-3 h-3" />
+              Grupa {submission.studentGroup}
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              {submission.term}
+            </span>
+            <span className="flex items-center gap-1">
+              <Layers className="w-3 h-3" />
+              {submission.groupLabel}
+            </span>
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3 h-3" />
+              {submission.classroom}
+            </span>
+          </div>
+          {submission.taskSubmitted && submission.taskSubmittedTime && (
+            <div className="flex items-center gap-1 text-xs text-gray-400 mt-1.5">
+              <History className="w-3 h-3" />
+              {timeSince(submission.taskSubmittedTime)}
+            </div>
           )}
         </div>
-        <div className="flex items-center gap-3 text-xs text-gray-400 mt-1.5 flex-wrap">
-          <span className="flex items-center gap-1">
-            <Users className="w-3 h-3" />
-            Grupa {submission.studentGroup}
-          </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
-            {submission.term}
-          </span>
-          <span className="flex items-center gap-1">
-            <Layers className="w-3 h-3" />
-            {submission.groupLabel}
-          </span>
-          <span className="flex items-center gap-1">
-            <MapPin className="w-3 h-3" />
-            {submission.classroom}
-          </span>
-        </div>
-        {submission.taskSubmitted && submission.taskSubmittedTime && (
-          <div className="flex items-center gap-1 text-xs text-gray-400 mt-1.5">
-            <History className="w-3 h-3" />
-            {timeSince(submission.taskSubmittedTime)}
-          </div>
-        )}
       </div>
 
       {/* Right side */}
-      <div className="flex flex-col items-end gap-2.5 flex-shrink-0">
+      <div className="flex items-center justify-between sm:justify-start sm:flex-col sm:items-end gap-3 sm:gap-2.5 flex-shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
         {submission.taskSubmitted && submission.taskSubmittedTime ? (
           <>
-            <div className="text-right">
-              <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
-                <Play className="w-3.5 h-3.5 text-gray-400" />
+            <div>
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700">
+                <Play className="w-3 h-3 text-gray-400" />
                 {formatTime(submission.taskStartedTime)}
               </div>
-              <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700 mt-0.5">
-                <Flag className="w-3.5 h-3.5 text-gray-400" />
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mt-0.5">
+                <Flag className="w-3 h-3 text-gray-400" />
                 {formatTime(submission.taskSubmittedTime)}
               </div>
             </div>
             <a
               href={`/api/project/download/studentassignment/${submission.id}`}
               download
-              className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg transition-colors font-medium"
+              className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg transition-colors font-medium flex-shrink-0"
             >
               <Download className="w-3.5 h-3.5" />
               Preuzmi rad

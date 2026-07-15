@@ -33,14 +33,14 @@ export default function TestSelectionPage() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       <header className="bg-gradient-to-r from-blue-950 to-blue-800 text-white shadow-xl">
-        <div className="flex items-center gap-5 pl-4 pr-6 py-5">
-          <a href="https://raf.edu.rs/" target="_blank" rel="noreferrer">
-            <img src={rafLogo} alt="RAF logo" className="h-14 w-auto flex-shrink-0" />
+        <div className="flex items-center gap-3 sm:gap-5 pl-3 sm:pl-4 pr-4 sm:pr-6 py-4 sm:py-5">
+          <a href="https://raf.edu.rs/" target="_blank" rel="noreferrer" className="flex-shrink-0">
+            <img src={rafLogo} alt="RAF logo" className="h-9 sm:h-14 w-auto" />
           </a>
-          <div className="w-px h-10 bg-white/25 flex-shrink-0" />
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-300">Praćenje predaje radova</h1>
-            <p className="text-blue-300 text-sm mt-0.5">Izaberite test koji želite da pratite</p>
+          <div className="hidden sm:block w-px h-10 bg-white/25 flex-shrink-0" />
+          <div className="min-w-0">
+            <h1 className="text-sm sm:text-xl font-bold tracking-tight text-slate-300 truncate">Praćenje predaje radova</h1>
+            <p className="text-blue-300 text-xs sm:text-sm mt-0.5 truncate">Izaberite test koji želite da pratite</p>
           </div>
         </div>
       </header>

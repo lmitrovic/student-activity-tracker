@@ -61,13 +61,15 @@ export default function StatsBar({ submitted, total, avgMs }: Props) {
             sub={`student${remaining === 1 ? '' : 'a'}`}
             valueColor="text-orange-300"
           />
-          <StatCard
-            icon={<Timer className="w-5 h-5 text-violet-500" />}
-            label="Prosečno vreme izrade"
-            value={avgMs !== null ? formatAvg(avgMs) : '—'}
-            sub={avgMs !== null ? `na osnovu ${submitted} predaja` : 'nema podataka'}
-            valueColor="text-violet-600"
-          />
+          <div className="col-span-2 sm:col-span-1">
+            <StatCard
+              icon={<Timer className="w-5 h-5 text-violet-500" />}
+              label="Prosečno vreme izrade"
+              value={avgMs !== null ? formatAvg(avgMs) : '—'}
+              sub={avgMs !== null ? `na osnovu ${submitted} predaja` : 'nema podataka'}
+              valueColor="text-violet-600"
+            />
+          </div>
         </div>
 
         <div className="space-y-1">

@@ -1,4 +1,4 @@
-import { Clock, Users, Download, Play, Flag } from 'lucide-react';
+import { Clock, Users, Download, Play, Flag, Calendar, Layers, MapPin, History } from 'lucide-react';
 import type { Submission } from '../types';
 
 const avatarColors = [
@@ -62,12 +62,29 @@ export default function SubmissionCard({ submission, isNew }: Props) {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1 text-xs text-gray-400 mt-1.5">
-          <Users className="w-3 h-3" />
-          <span>Grupa {submission.studentGroup} &nbsp;·&nbsp; {submission.term} &nbsp;·&nbsp; {submission.groupLabel} &nbsp;·&nbsp; {submission.classroom}</span>
+        <div className="flex items-center gap-3 text-xs text-gray-400 mt-1.5 flex-wrap">
+          <span className="flex items-center gap-1">
+            <Users className="w-3 h-3" />
+            Grupa {submission.studentGroup}
+          </span>
+          <span className="flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
+            {submission.term}
+          </span>
+          <span className="flex items-center gap-1">
+            <Layers className="w-3 h-3" />
+            {submission.groupLabel}
+          </span>
+          <span className="flex items-center gap-1">
+            <MapPin className="w-3 h-3" />
+            {submission.classroom}
+          </span>
         </div>
         {submission.taskSubmitted && submission.taskSubmittedTime && (
-          <div className="text-xs text-gray-400 mt-1.5">{timeSince(submission.taskSubmittedTime)}</div>
+          <div className="flex items-center gap-1 text-xs text-gray-400 mt-1.5">
+            <History className="w-3 h-3" />
+            {timeSince(submission.taskSubmittedTime)}
+          </div>
         )}
       </div>
 
